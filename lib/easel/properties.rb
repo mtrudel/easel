@@ -1,3 +1,5 @@
+require 'rdf'
+
 module RDF
   class Vocabulary
     def self.properties
