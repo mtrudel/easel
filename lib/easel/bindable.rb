@@ -7,7 +7,8 @@ module Easel
     module ClassMethods
       def bind_to(vocab, opts = {})
         opts ||= {}
-        @vocab = vocab
+        class_attribute :vocab
+        self.vocab = vocab
         mapping = opts[:mapping] || {}
         (vocab.properties - Mongoid.destructive_fields).each do |prop|
           if mapping[prop]
@@ -20,9 +21,11 @@ module Easel
     end
 
     def to_rdf
-      raise "Not done yet"
-      @vocab.properties.each do |prop|
-        # create the implied triple
+      RDF::Graph.new do |graph|
+        vocab.properties.each do |prop|
+          next unless self[prop]
+          graph << ['#', vocab.send(prop), self[prop]]
+        end
       end
     end
   end
