@@ -13,7 +13,6 @@ module Easel
           if mapping[prop]
             field prop, :type => String, :as => mapping[prop]
           else
-            puts "Creating #{prop}"
             field prop, :type => String
           end
         end
@@ -22,6 +21,7 @@ module Easel
 
     def to_rdf
       @vocab.properties.each do |prop|
+        raise "Not done yet"
         # create the implied triple
       end
     end
