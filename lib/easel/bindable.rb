@@ -20,8 +20,8 @@ module Easel
     end
 
     def to_rdf
+      raise "Not done yet"
       @vocab.properties.each do |prop|
-        raise "Not done yet"
         # create the implied triple
       end
     end
