@@ -13,11 +13,6 @@ module Mongoid
     end
 
     module ClassMethods
-      attr_accessor :vocab
-
-      def class_attribute(*)
-      end
-
       def field(*args)
       end
     end
