@@ -8,8 +8,8 @@ module Mongoid
       base.extend(ClassMethods)
     end
 
-    def vocab
-      self.class.vocab
+    def vocabularies
+      self.class.vocabularies
     end
 
     module ClassMethods

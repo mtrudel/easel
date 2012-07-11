@@ -23,4 +23,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "mongoid"
   s.add_runtime_dependency "rdf"
   s.add_runtime_dependency "rdf-xml"
+  s.add_runtime_dependency "activesupport"
 end

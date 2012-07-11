@@ -1,14 +1,18 @@
+require 'active_support'
+require 'active_support/core_ext'
+
 module Easel
   module Bindable
-    def self.included(base)
-      base.extend(ClassMethods)
+    extend ActiveSupport::Concern
+
+    included do
+      class_attribute :vocabularies
+      self.vocabularies = Set.new
     end
 
     module ClassMethods
       def bind_to(vocab, opts = {})
-        opts ||= {}
-        class_attribute :vocab
-        self.vocab = vocab
+        vocabularies << vocab
         mapping = opts[:mapping] || {}
         (vocab.properties - Mongoid.destructive_fields).each do |prop|
           if mapping[prop]
@@ -22,9 +26,11 @@ module Easel
 
     def to_rdf
       RDF::Graph.new do |graph|
-        vocab.properties.each do |prop|
-          next unless self[prop]
-          graph << ['#', vocab.send(prop), self[prop]]
+        vocabularies.each do |v|
+          v.properties.each do |prop|
+            next unless self[prop]
+            graph << ['#', v.send(prop), self[prop]]
+          end
         end
       end
     end
