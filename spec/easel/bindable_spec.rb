@@ -40,10 +40,16 @@ describe Easel do
       subject.bind_to(vocab2)
     end
 
-    it 'sending mapped fields should map them' do
+    it 'should properly map fields as requested' do
       vocab = double(:properties => [:bacon])
       subject.should_receive(:field).with(:bacon, :type => String, :as => :delicious)
       subject.bind_to(vocab, :mapping => {:bacon => :delicious})
+    end
+
+    it 'should only map fields as requested' do
+      vocab = double(:properties => [:bacon, :ham, :sausage])
+      subject.should_receive(:field).with(:bacon, :type => String)
+      subject.bind_to(vocab, :only => [:bacon])
     end
   end
 

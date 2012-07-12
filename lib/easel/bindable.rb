@@ -14,7 +14,8 @@ module Easel
       def bind_to(vocab, opts = {})
         vocabularies << vocab
         mapping = opts[:mapping] || {}
-        (vocab.properties - Mongoid.destructive_fields).each do |prop|
+        properties = opts[:only] || vocab.properties
+        (properties - Mongoid.destructive_fields).each do |prop|
           if mapping[prop]
             field prop, :type => String, :as => mapping[prop]
           else
