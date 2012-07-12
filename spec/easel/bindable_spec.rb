@@ -54,8 +54,8 @@ describe Easel do
       o = subject.new
       o.should_receive(:[]).with(:bacon).twice.and_return('yummy')
       o.should_receive(:[]).with(:ham).and_return(nil)
-      o.to_rdf.should == RDF::Graph.new do |graph|
-        graph << ['#', 'bacon', 'yummy']
+      o.to_rdf('abc').should == RDF::Graph.new do |graph|
+        graph << ['abc', 'bacon', 'yummy']
       end
     end
 
@@ -69,9 +69,9 @@ describe Easel do
       o.should_receive(:[]).with(:ham).and_return(nil)
       o.should_receive(:[]).with(:beef).twice.and_return('yucky')
       o.should_receive(:[]).with(:meatballs).and_return(nil)
-      o.to_rdf.should == RDF::Graph.new do |graph|
-        graph << ['#', 'bacon', 'yummy']
-        graph << ['#', 'beef', 'yucky']
+      o.to_rdf('abc').should == RDF::Graph.new do |graph|
+        graph << ['abc', 'bacon', 'yummy']
+        graph << ['abc', 'beef', 'yucky']
       end
     end
   end

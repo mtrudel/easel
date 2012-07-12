@@ -24,12 +24,12 @@ module Easel
       end
     end
 
-    def to_rdf
+    def to_rdf(url)
       RDF::Graph.new do |graph|
         vocabularies.each do |v|
           v.properties.each do |prop|
             next unless self[prop]
-            graph << ['#', v.send(prop), self[prop]]
+            graph << [url, v.send(prop), self[prop]]
           end
         end
       end
