@@ -21,6 +21,7 @@ module Easel
           else
             field prop, :type => String
           end
+          attr_accessible prop
         end
       end
     end

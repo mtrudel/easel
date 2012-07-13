@@ -15,6 +15,9 @@ module Mongoid
     module ClassMethods
       def field(*args)
       end
+
+      def attr_accessible(*args)
+      end
     end
   end
 end

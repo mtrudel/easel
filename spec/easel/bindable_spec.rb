@@ -23,6 +23,7 @@ describe Easel do
       vocab = double(:properties => [:bacon, :ham, :sausage])
       vocab.properties.each do |p|
         subject.should_receive(:field).with(p, :type => String)
+        subject.should_receive(:attr_accessible).with(p)
       end
       subject.bind_to(vocab)
     end
@@ -31,10 +32,12 @@ describe Easel do
       vocab1 = double(:properties => [:bacon, :ham, :sausage])
       vocab1.properties.each do |p|
         subject.should_receive(:field).with(p, :type => String)
+        subject.should_receive(:attr_accessible).with(p)
       end
       vocab2 = double(:properties => [:beef, :meatballs, :hamburger])
       vocab2.properties.each do |p|
         subject.should_receive(:field).with(p, :type => String)
+        subject.should_receive(:attr_accessible).with(p)
       end
       subject.bind_to(vocab1)
       subject.bind_to(vocab2)
@@ -43,12 +46,14 @@ describe Easel do
     it 'should properly map fields as requested' do
       vocab = double(:properties => [:bacon])
       subject.should_receive(:field).with(:bacon, :type => String, :as => :delicious)
+      subject.should_receive(:attr_accessible).with(:bacon)
       subject.bind_to(vocab, :mapping => {:bacon => :delicious})
     end
 
     it 'should only map fields as requested' do
       vocab = double(:properties => [:bacon, :ham, :sausage])
       subject.should_receive(:field).with(:bacon, :type => String)
+      subject.should_receive(:attr_accessible).with(:bacon)
       subject.bind_to(vocab, :only => [:bacon])
     end
   end
