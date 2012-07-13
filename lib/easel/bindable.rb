@@ -21,7 +21,7 @@ module Easel
           else
             field prop, :type => String
           end
-          attr_accessible prop
+          attr_accessible prop unless opts[:accessible] === false
         end
       end
     end

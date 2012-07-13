@@ -56,6 +56,13 @@ describe Easel do
       subject.should_receive(:attr_accessible).with(:bacon)
       subject.bind_to(vocab, :only => [:bacon])
     end
+
+    it 'should not make attributes accessible if asked not to' do
+      vocab = double(:properties => [:bacon])
+      subject.should_receive(:field).with(:bacon, :type => String)
+      subject.should_not_receive(:attr_accessible).with(:bacon)
+      subject.bind_to(vocab, :accessible => false)
+    end
   end
 
   describe 'to_rdf' do
