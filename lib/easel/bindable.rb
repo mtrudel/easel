@@ -32,7 +32,11 @@ module Easel
         vocabularies.each do |v|
           v.properties.each do |prop|
             next unless self[prop]
-            graph << [url, v.send(prop), self[prop]]
+            if self[prop].kind_of? Enumerable
+              self[prop].each { |p| graph << [url, v.send(prop), p] }
+            else
+              graph << [url, v.send(prop), self[prop]]
+            end
           end
         end
       end
