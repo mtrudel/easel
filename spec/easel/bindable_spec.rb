@@ -67,29 +67,37 @@ describe Easel do
 
   describe 'to_rdf' do
     it 'should properly convert fields with values set' do
-      vocab = double('vocab', :bacon => 'bacon', :ham => 'ham', :properties => [:bacon, :ham])
+      uri = RDF::URI.new('http://example.com')
+      bacon = RDF::URI.intern('bacon')
+      ham = RDF::URI.intern('ham')
+      vocab = double('vocab', :bacon => bacon, :ham => ham, :properties => [:bacon, :ham])
       subject.bind_to(vocab)
       o = subject.new
-      o.should_receive(:[]).with(:bacon).twice.and_return('yummy')
+      o.should_receive(:[]).with(:bacon).any_number_of_times.and_return('yummy')
       o.should_receive(:[]).with(:ham).and_return(nil)
-      o.to_rdf('abc').should == RDF::Graph.new do |graph|
-        graph << ['abc', 'bacon', 'yummy']
+      o.to_rdf(uri).should == RDF::Graph.new do |graph|
+        graph << [uri, bacon, 'yummy']
       end
     end
 
     it 'should properly convert all declared vocabularies' do
-      vocab1 = double('vocab 1', :bacon => 'bacon', :ham => 'ham', :properties => [:bacon, :ham])
-      vocab2 = double('vocab 2', :beef => 'beef', :meatballs => 'meatballs', :properties => [:beef, :meatballs])
+      uri = RDF::URI.new('http://example.com')
+      bacon = RDF::URI.intern('bacon')
+      ham = RDF::URI.intern('ham')
+      beef = RDF::URI.intern('beef')
+      meatballs = RDF::URI.intern('meatballs')
+      vocab1 = double('vocab 1', :bacon => bacon, :ham => ham, :properties => [:bacon, :ham])
+      vocab2 = double('vocab 2', :beef => beef, :meatballs => meatballs, :properties => [:beef, :meatballs])
       subject.bind_to(vocab1)
       subject.bind_to(vocab2)
       o = subject.new
-      o.should_receive(:[]).with(:bacon).twice.and_return('yummy')
+      o.should_receive(:[]).with(:bacon).any_number_of_times.and_return('yummy')
       o.should_receive(:[]).with(:ham).and_return(nil)
-      o.should_receive(:[]).with(:beef).twice.and_return('yucky')
+      o.should_receive(:[]).with(:beef).any_number_of_times.and_return('yucky')
       o.should_receive(:[]).with(:meatballs).and_return(nil)
-      o.to_rdf('abc').should == RDF::Graph.new do |graph|
-        graph << ['abc', 'bacon', 'yummy']
-        graph << ['abc', 'beef', 'yucky']
+      o.to_rdf(uri).should == RDF::Graph.new do |graph|
+        graph << [uri, bacon, 'yummy']
+        graph << [uri, beef, 'yucky']
       end
     end
   end
