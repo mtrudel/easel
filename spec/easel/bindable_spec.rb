@@ -80,6 +80,23 @@ describe Easel do
       end
     end
 
+    it 'should properly convert fields which are enumerable' do
+      uri = RDF::URI.new('http://example.com')
+      bacon = RDF::URI.intern('bacon')
+      ham = RDF::URI.intern('ham')
+      vocab = double('vocab', :bacon => bacon, :ham => ham, :properties => [:bacon, :ham])
+      subject.bind_to(vocab)
+      o = subject.new
+      o.should_receive(:[]).with(:bacon).any_number_of_times.and_return(['crispy', 'back', 'peameal'])
+      o.should_receive(:[]).with(:ham).and_return(nil)
+      o.to_rdf(uri).should == RDF::Graph.new do |graph|
+        graph << [uri, bacon, 'crispy']
+        graph << [uri, bacon, 'back']
+        graph << [uri, bacon, 'peameal']
+      end
+    end
+
+
     it 'should properly convert all declared vocabularies' do
       uri = RDF::URI.new('http://example.com')
       bacon = RDF::URI.intern('bacon')
