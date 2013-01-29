@@ -14,13 +14,14 @@ module Easel
       def bind_to(vocab, opts = {})
         vocabularies << vocab
         mapping = opts[:mapping] || {}
-        type = opts[:type] || String
         properties = opts[:only] || vocab.properties
+        opts.except! :mapping, :only
+
         (properties - Mongoid.destructive_fields).each do |prop|
           if mapping[prop]
-            field prop, :type => type, :as => mapping[prop]
+            field prop, opts.merge(:as => mapping[prop])
           else
-            field prop, :type => type
+            field prop, opts
           end
           attr_accessible prop unless opts[:accessible] === false
         end
