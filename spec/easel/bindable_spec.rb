@@ -22,7 +22,7 @@ describe Easel do
     it 'basic usage should create field definitions for each vocabulary entry' do
       vocab = double(:properties => [:bacon, :ham, :sausage])
       vocab.properties.each do |p|
-        subject.should_receive(:field).with(p, :type => String)
+        subject.should_receive(:field).with(p, {})
         subject.should_receive(:attr_accessible).with(p)
       end
       subject.bind_to(vocab)
@@ -31,12 +31,12 @@ describe Easel do
     it 'should properly handle multiple calls to multiple vocabularies' do
       vocab1 = double(:properties => [:bacon, :ham, :sausage])
       vocab1.properties.each do |p|
-        subject.should_receive(:field).with(p, :type => String)
+        subject.should_receive(:field).with(p, {})
         subject.should_receive(:attr_accessible).with(p)
       end
       vocab2 = double(:properties => [:beef, :meatballs, :hamburger])
       vocab2.properties.each do |p|
-        subject.should_receive(:field).with(p, :type => String)
+        subject.should_receive(:field).with(p, {})
         subject.should_receive(:attr_accessible).with(p)
       end
       subject.bind_to(vocab1)
@@ -45,21 +45,21 @@ describe Easel do
 
     it 'should properly map fields as requested' do
       vocab = double(:properties => [:bacon])
-      subject.should_receive(:field).with(:bacon, :type => String, :as => :delicious)
+      subject.should_receive(:field).with(:bacon, :as => :delicious)
       subject.should_receive(:attr_accessible).with(:bacon)
       subject.bind_to(vocab, :mapping => {:bacon => :delicious})
     end
 
     it 'should only map fields as requested' do
       vocab = double(:properties => [:bacon, :ham, :sausage])
-      subject.should_receive(:field).with(:bacon, :type => String)
+      subject.should_receive(:field).with(:bacon, {})
       subject.should_receive(:attr_accessible).with(:bacon)
       subject.bind_to(vocab, :only => [:bacon])
     end
 
     it 'should not make attributes accessible if asked not to' do
       vocab = double(:properties => [:bacon])
-      subject.should_receive(:field).with(:bacon, :type => String)
+      subject.should_receive(:field).with(:bacon, :accessible => false)
       subject.should_not_receive(:attr_accessible).with(:bacon)
       subject.bind_to(vocab, :accessible => false)
     end
