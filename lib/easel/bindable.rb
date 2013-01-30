@@ -13,17 +13,15 @@ module Easel
     module ClassMethods
       def bind_to(vocab, opts = {})
         vocabularies << vocab
-        mapping = opts[:mapping] || {}
-        properties = opts[:only] || vocab.properties
+        opts[:only] = Hash[opts[:only].map { |k| [k, {}] }] if opts[:only].is_a? Array
+        specific_opts = opts[:mapping] || opts[:only] || {}
+        properties = opts[:only]? opts[:only].keys : vocab.properties
         opts.except! :mapping, :only
 
         (properties - Mongoid.destructive_fields).each do |prop|
-          if mapping[prop]
-            field prop, opts.merge(:as => mapping[prop])
-          else
-            field prop, opts
-          end
-          attr_accessible prop unless opts[:accessible] === false
+          my_opts = opts.merge(specific_opts[prop] || {})
+          field prop, my_opts.except(:accessible)
+          attr_accessible prop unless my_opts[:accessible] === false
         end
       end
     end
