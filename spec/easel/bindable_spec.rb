@@ -25,6 +25,7 @@ describe Easel do
         subject.should_receive(:field).with(p, {})
         subject.should_receive(:attr_accessible).with(p)
       end
+
       subject.bind_to(vocab)
     end
 
@@ -39,30 +40,81 @@ describe Easel do
         subject.should_receive(:field).with(p, {})
         subject.should_receive(:attr_accessible).with(p)
       end
+
       subject.bind_to(vocab1)
       subject.bind_to(vocab2)
     end
 
-    it 'should properly map fields as requested' do
+    it 'should set default options as requested' do
       vocab = double(:properties => [:bacon])
-      subject.should_receive(:field).with(:bacon, :as => :delicious)
+      subject.should_receive(:field).with(:bacon, :as => :delicious, :localized => true)
       subject.should_receive(:attr_accessible).with(:bacon)
-      subject.bind_to(vocab, :mapping => {:bacon => :delicious})
+
+      subject.bind_to(vocab, :as => :delicious, :localized => true )
     end
 
-    it 'should only map fields as requested' do
-      vocab = double(:properties => [:bacon, :ham, :sausage])
-      subject.should_receive(:field).with(:bacon, {})
+    it 'should properly set the options on mapped fields as requested' do
+      vocab = double(:properties => [:bacon])
+      subject.should_receive(:field).with(:bacon, :as => :delicious, :localized => true)
       subject.should_receive(:attr_accessible).with(:bacon)
-      subject.bind_to(vocab, :only => [:bacon])
+
+      subject.bind_to(vocab, :mapping => {:bacon => { :as => :delicious, :localized => true }})
+    end
+
+    it 'should only set options on the mapped field' do
+      vocab = double(:properties => [:bacon, :ham])
+      subject.should_receive(:field).with(:bacon, :as => :delicious)
+      subject.should_receive(:field).with(:ham, {})
+      subject.should_receive(:attr_accessible).with(:bacon)
+      subject.should_receive(:attr_accessible).with(:ham)
+      subject.bind_to(vocab, :mapping => {:bacon => { :as => :delicious }})
+    end
+
+    it 'should override default options if asked to in the mapping' do
+      vocab = double(:properties => [:bacon])
+      subject.should_receive(:field).with(:bacon, { :localized => false })
+      subject.should_receive(:attr_accessible).with(:bacon)
+      subject.bind_to(vocab, :localized => true, :mapping => { :bacon => { :localized => false }})
     end
 
     it 'should not make attributes accessible if asked not to' do
       vocab = double(:properties => [:bacon])
-      subject.should_receive(:field).with(:bacon, :accessible => false)
+      subject.should_receive(:field).with(:bacon, {})
       subject.should_not_receive(:attr_accessible).with(:bacon)
       subject.bind_to(vocab, :accessible => false)
     end
+
+    it 'should not make mapped attributes accessible if asked not to' do
+      vocab = double(:properties => [:bacon, :ham])
+      subject.should_receive(:field).with(:bacon, {})
+      subject.should_receive(:field).with(:ham, {})
+      subject.should_receive(:attr_accessible).with(:bacon)
+      subject.should_not_receive(:attr_accessible).with(:ham)
+      subject.bind_to(vocab, :mapping => { :ham => { :accessible => false}})
+    end
+
+    it 'should only bind to :only fields specified by array' do
+      vocab = double(:properties => [:bacon, :ham])
+      subject.should_receive(:field).with(:bacon, {})
+      subject.should_receive(:attr_accessible).with(:bacon)
+
+      subject.bind_to(vocab, :only => [:bacon])
+    end
+
+    it 'should only set default options on :only field' do
+      vocab = double(:properties => [:bacon, :ham])
+      subject.should_receive(:field).with(:bacon, :as => :delicious)
+      subject.should_receive(:attr_accessible).with(:bacon)
+      subject.bind_to(vocab, :as => :delicious, :only => [:bacon])
+    end
+
+    it 'should only set options on :only field' do
+      vocab = double(:properties => [:bacon, :ham])
+      subject.should_receive(:field).with(:bacon, :as => :delicious)
+      subject.should_receive(:attr_accessible).with(:bacon)
+      subject.bind_to(vocab, :only => {:bacon => { :as => :delicious }})
+    end
+
   end
 
   describe 'to_rdf' do
