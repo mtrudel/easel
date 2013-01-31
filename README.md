@@ -51,7 +51,7 @@ By default, `bind_to` will create fields for every property in the named
 vocabulary, each of type `String`. Easel provides some flexibility with this,
 via the following options:
 
-* *Default Options*: Any extra arguments passed to `bind_to` will be copied
+* **Default Options**: Any extra arguments passed to `bind_to` will be copied
   through to each call to `field`. This makes it easy to set global options,
   such as localize flags. By way of example, a line such as this:
 
@@ -60,7 +60,7 @@ via the following options:
   will cause Easel to create a Mongoid field for each property in `RDF::DC`,
   with `:localize => true` as an option to each of them.
 
-* *Mapping Options*: There are many cases where you only want to specify extra
+* **Mapping Options**: There are many cases where you only want to specify extra
   mongoid properties for specific fields. Easel allows you to do this by way of
   the `mapping` option. To wit:
 
@@ -76,7 +76,7 @@ via the following options:
   to Mongoid fields; `mapping` merely changes the options passed to Mongoid for
   the listed properties.
 
-* *Binding Specific Properties*: It's often the case that you only want to bind
+* **Binding Specific Properties**: It's often the case that you only want to bind
   a few fields from a vocabulary into your model. Easel lets you do that by
   listing a set of field names to bind, using the `only` option:
 
