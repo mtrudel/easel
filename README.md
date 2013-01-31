@@ -55,7 +55,7 @@ via the following options:
   through to each call to `field`. This makes it easy to set global options,
   such as localize flags. By way of example, a line such as this:
 
-      bind_to RDF:DC, :localize => true
+        bind_to RDF:DC, :localize => true
 
   will cause Easel to create a Mongoid field for each property in `RDF::DC`,
   with `:localize => true` as an option to each of them.
@@ -64,12 +64,12 @@ via the following options:
   mongoid properties for specific fields. Easel allows you to do this by way of
   the `mapping` option. To wit:
 
-      bind_to RDF::DC, :mapping => { :title => { :default => "Untitled" } }
+        bind_to RDF::DC, :mapping => { :title => { :default => "Untitled" } }
 
   will cause Easel to create a `title` field via a call similar to the
   following:
 
-      field :title, :default => "Untitled"
+        field :title, :default => "Untitled"
 
   Any number of property mappings can be specified inside the `mapping` option.
   It's important to note that all properties in the vocabulary are still bound
@@ -80,13 +80,13 @@ via the following options:
   a few fields from a vocabulary into your model. Easel lets you do that by
   listing a set of field names to bind, using the `only` option:
 
-      bind_to RDF::DC, :only => [:title]
+        bind_to RDF::DC, :only => [:title]
 
   will create a Mongoid field for _only_ the `title` property. In addition to
   taking an array of property names, `only` also accepts a hash similar to the
   format of `mapping`:
 
-      bind_to RDF::DC, :only => { :title => { :default => "Untitled" } }
+        bind_to RDF::DC, :only => { :title => { :default => "Untitled" } }
 
   will cause Easel to _only_ create a field for `title`, passing the specified
   options into Mongoid. No other properties from the `RDF::DC` vocabulary are
