@@ -31,10 +31,22 @@ module Easel
         vocabularies.each do |v|
           v.properties.each do |prop|
             next unless self[prop]
-            if self[prop].kind_of? Enumerable
-              self[prop].each { |p| graph << [url, v.send(prop), p] }
+            if self.fields[prop.to_s].localized?
+              i18n_prop = self.as_document[prop.to_s]
+
+              i18n_prop.each do |locale, property|
+                if property.kind_of? Enumerable
+                  property.each { |p| graph << [url, v.send(prop), RDF::Literal.new(p, :language => locale)] }
+                else
+                  graph << [url, v.send(prop), RDF::Literal.new(property, :language => locale)]
+                end
+              end
             else
-              graph << [url, v.send(prop), self[prop]]
+              if self[prop].kind_of? Enumerable
+                self[prop].each { |p| graph << [url, v.send(prop), p] }
+              else
+                graph << [url, v.send(prop), self[prop]]
+              end
             end
           end
         end
