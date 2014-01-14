@@ -13,28 +13,23 @@ module Easel
     module ClassMethods
       def bind_to(vocab, opts = {})
         vocabularies << vocab
-        opts[:only] = Hash[opts[:only].map { |k| [k, {}] }] if opts[:only].is_a? Array
-        specific_opts = opts[:mapping] || opts[:only] || {}
-        properties = opts[:only]? opts[:only].keys : vocab.properties
-        opts.except! :mapping, :only
-
-        (properties - Mongoid.destructive_fields).each do |prop|
-          my_opts = opts.merge(specific_opts[prop] || {})
-          field prop, my_opts.except(:accessible)
-          attr_accessible prop unless my_opts[:accessible] === false
-        end
+        properties = vocab.properties.dup
+        opts[:only] = [opts[:only]] unless opts[:only].nil? || opts[:only].is_a?(Enumerable)
+        properties &= opts[:only] if opts[:only]
+        properties.each { |property| yield property } if block_given?
       end
     end
 
     def to_rdf(url)
+      properties = self.serializable_hash
       RDF::Graph.new do |graph|
         vocabularies.each do |v|
           v.properties.each do |prop|
-            next unless self[prop]
-            if self[prop].kind_of? Enumerable
-              self[prop].each { |p| graph << [url, v.send(prop), p] }
+            next unless properties[prop]
+            if properties[prop].kind_of? Enumerable
+              properties[prop].each { |p| graph << [url, v.send(prop), p] }
             else
-              graph << [url, v.send(prop), self[prop]]
+              graph << [url, v.send(prop), properties[prop]]
             end
           end
         end

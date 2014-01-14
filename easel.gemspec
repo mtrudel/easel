@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Mat Trudel"]
   s.email       = ["mat@geeky.net"]
   s.homepage    = ""
-  s.summary     = %q{Easel lets your Mongoid models speak RDF}
-  s.description = %q{Easel lets your Mongoid models speak RDF}
+  s.summary     = %q{Easel lets your ActiveModel models speak RDF}
+  s.description = %q{Easel lets your ActiveModel models speak RDF}
 
   s.rubyforge_project = "easel"
 
@@ -19,8 +19,9 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_development_dependency "rspec"
+  s.add_development_dependency "rake"
 
-  s.add_runtime_dependency "mongoid"
+  s.add_runtime_dependency "activemodel"
   s.add_runtime_dependency "rdf"
   s.add_runtime_dependency "rdf-xml"
   s.add_runtime_dependency "activesupport"
